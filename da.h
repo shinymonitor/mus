@@ -37,9 +37,6 @@
 #define MUS_da_append_many(da, new_items, new_items_count) do {MUS_da_reserve((da), (da)->count + (new_items_count)); memcpy((da)->items + (da)->count, (new_items), (new_items_count)*sizeof(*(da)->items)); (da)->count += (new_items_count);} while (0)
 #define MUS_da_resize(da, new_size) do {MUS_da_reserve((da), new_size); (da)->count = (new_size);} while (0)
 
-#define MUS_da_items(da) (da)->items
-#define MUS_da_get(da, index) (DA_ASSERT((da)->count>index), (da)->items[index])
-#define MUS_da_last(da) (da)->items[(DA_ASSERT((da)->count > 0), (da)->count-1)]
 #define MUS_da_remove_unordered(da, i) do {size_t j = (i); DA_ASSERT(j < (da)->count); (da)->items[j] = (da)->items[--(da)->count];} while(0)
 #define MUS_da_foreach(Type, it, da) for (Type* it = (da)->items; it < (da)->items + (da)->count; ++it)
 #define MUS_da_reset(da) (da)->count=0
@@ -56,15 +53,15 @@ MUS_da_define(char, MUS_StringBuilder);
 #define MUS_sb_append_str(sb, str)  do {const char* s = (str); size_t n = strlen(s); MUS_da_append_many(sb, s, n);} while (0)
 #define MUS_sb_append_null(sb) MUS_da_append(sb, '\0')
 
-#define MUS_sb_items(sb) MUS_da_items((sb))
-#define MUS_sb_get(sb, index) MUS_da_get((sb), index)
+#define MUS_sb_items(sb) (sb)->items
+#define MUS_sb_get(sb, index) (DA_ASSERT((sb)->count>index), (sb)->items[index])
+#define MUS_sb_last(sb) (sb)->items[(sb_ASSERT((sb)->count > 0), (sb)->count-1)]
+#define MUS_sb_remove_unordered(sb, i) MUS_da_remove_unordered((sb), i)
+#define MUS_sb_foreach(it, da) MUS_da_foreach(char, it, da)
 #define MUS_sb_reset(sb) MUS_da_reset((sb))
 #define MUS_sb_free(sb) MUS_da_free((sb))
 
-#define MUS_sb_last(sb) MUS_da_last((sb))
-#define MUS_sb_remove_unordered(sb, i) MUS_da_remove_unordered((sb), i)
-#define MUS_sb_foreach(it, da) MUS_da_foreach(char, it, da)
-
+#define MUS_sb_len(sb) (sb)->count
 #define MUS_SB_Fmt "%.*s"
 #define MUS_SB_Arg(sb) (int)(sb)->count, (sb)->items
 
