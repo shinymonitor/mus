@@ -1,17 +1,17 @@
 #ifndef _MUS_DA_H
 #define _MUS_DA_H
 
-#ifndef DA_ASSERT
+#ifndef MUS_ASSERT
 #include <assert.h>
-#define DA_ASSERT assert
+#define MUS_ASSERT assert
 #endif
-#ifndef DA_REALLOC
+#ifndef MUS_REALLOC
 #include <stdlib.h>
-#define DA_REALLOC realloc
+#define MUS_REALLOC realloc
 #endif
-#ifndef DA_FREE
+#ifndef MUS_FREE
 #include <stdlib.h>
-#define DA_FREE free
+#define MUS_FREE free
 #endif
 
 //================================================================
@@ -26,21 +26,21 @@
     if ((expected_capacity) > (da)->capacity) { \
         if ((da)->capacity == 0) (da)->capacity = MUS_DA_INIT_CAP; \
         while ((expected_capacity) > (da)->capacity) (da)->capacity *= 2; \
-        (da)->items = DA_REALLOC((da)->items, (da)->capacity * sizeof(*(da)->items)); DA_ASSERT((da)->items != NULL && "DA RESERVE FAILED"); \
+        (da)->items = MUS_REALLOC((da)->items, (da)->capacity * sizeof(*(da)->items)); MUS_ASSERT((da)->items != NULL && "DA RESERVE FAILED"); \
     } \
     else if ((expected_capacity) < (da)->capacity/2 && (da)->capacity > MUS_DA_INIT_CAP) { \
         do {(da)->capacity /= 2;} while ((da)->capacity/2 > MUS_DA_INIT_CAP && (expected_capacity) <= (da)->capacity/2); \
-        (da)->items = DA_REALLOC((da)->items, (da)->capacity * sizeof(*(da)->items)); DA_ASSERT((da)->items != NULL && "DA RESERVE FAILED"); \
+        (da)->items = MUS_REALLOC((da)->items, (da)->capacity * sizeof(*(da)->items)); MUS_ASSERT((da)->items != NULL && "DA RESERVE FAILED"); \
     } \
 } while (0)
 #define MUS_da_append(da, item) do {MUS_da_reserve((da), (da)->count + 1); (da)->items[(da)->count++] = (item);} while (0)
 #define MUS_da_append_many(da, new_items, new_items_count) do {MUS_da_reserve((da), (da)->count + (new_items_count)); memcpy((da)->items + (da)->count, (new_items), (new_items_count)*sizeof(*(da)->items)); (da)->count += (new_items_count);} while (0)
 #define MUS_da_resize(da, new_size) do {MUS_da_reserve((da), new_size); (da)->count = (new_size);} while (0)
 
-#define MUS_da_remove_unordered(da, i) do {size_t j = (i); DA_ASSERT(j < (da)->count); (da)->items[j] = (da)->items[--(da)->count];} while(0)
+#define MUS_da_remove_unordered(da, i) do {size_t j = (i); MUS_ASSERT(j < (da)->count); (da)->items[j] = (da)->items[--(da)->count];} while(0)
 #define MUS_da_foreach(Type, it, da) for (Type* it = (da)->items; it < (da)->items + (da)->count; ++it)
 #define MUS_da_reset(da) (da)->count=0
-#define MUS_da_free(da) do {(da)->count=0; (da)->capacity=0; DA_FREE((da)->items);} while(0)
+#define MUS_da_free(da) do {(da)->count=0; (da)->capacity=0; MUS_FREE((da)->items);} while(0)
 
 //================================================================
 //String Builder
@@ -54,7 +54,7 @@ MUS_da_define(char, MUS_StringBuilder);
 #define MUS_sb_append_null(sb) MUS_da_append(sb, '\0')
 
 #define MUS_sb_items(sb) (sb)->items
-#define MUS_sb_get(sb, index) (DA_ASSERT((sb)->count>index), (sb)->items[index])
+#define MUS_sb_get(sb, index) (MUS_ASSERT((sb)->count>index), (sb)->items[index])
 #define MUS_sb_last(sb) (sb)->items[(sb_ASSERT((sb)->count > 0), (sb)->count-1)]
 #define MUS_sb_remove_unordered(sb, i) MUS_da_remove_unordered((sb), i)
 #define MUS_sb_foreach(it, da) MUS_da_foreach(char, it, da)
