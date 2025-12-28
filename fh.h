@@ -1,15 +1,18 @@
 #include "da.h"
+#include "log.h"
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
 #include <time.h>
+#include <sys/stat.h> 
 #include <stdint.h>
+#include <stdbool.h>
 
 //================================================================
 //Platform
 //================================================================
 
 #ifdef _WIN32
-	#include <direct.h>
-    #include <windows.h>
-    #include <io.h>
 	#define MUS_NL "\r\n"
 	#define MUS_PS '\\'
 	#define MUS_MKDIR_CMD "mkdir %s"
@@ -20,8 +23,6 @@
 	#define MUS_RMDIR_CMD "rmdir /S /Q %s"
 	#define MUS_FETCH_CMD "curl -L -o lib\\%s %s"
 #else
-    #include <unistd.h>
-    #include <sys/stat.h>
 	#define MUS_NL "\n"
 	#define MUS_PS '/'
 	#define MUS_MKDIR_CMD "mkdir -p %s"

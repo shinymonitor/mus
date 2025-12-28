@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <assert.h>
+#include <stdlib.h>
 
 #define MUS_STRINGIFY(x) #x
 #define MUS_TOSTRING(x) MUS_STRINGIFY(x)
